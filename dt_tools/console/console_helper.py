@@ -430,9 +430,10 @@ class ConsoleHelper():
         if row <= 0 or column <= 0:
             LOGGER.debug('cursor_move - row/column must be > 0')
             return False
-        if column > max_columns or row > max_rows:
-            LOGGER.debug((f'cursor_move - row > {max_rows} or col > {max_columns}'))
-            return False
+        if max_rows > 0 and max_columns > 0:
+            if column > max_columns or row > max_rows:
+                LOGGER.debug((f'cursor_move - row > {max_rows} or col > {max_columns}'))
+                return False
         
         cls._output_to_terminal(f"{_ConsoleControl.ESC}[%d;%dH" % (row, column))    
         return True
