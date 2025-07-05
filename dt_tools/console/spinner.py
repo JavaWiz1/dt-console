@@ -21,7 +21,7 @@ from datetime import datetime as dt
 from enum import Enum
 
 from loguru import logger as LOGGER
-
+from threading import Lock
 from dt_tools.console.console_helper import ConsoleHelper
 
 
@@ -75,6 +75,7 @@ class Spinner():
         self._idx = 99
         self._finished = False
         self._spinner_thread = None
+        self._spinner_lock = Lock()
         # self.console = ConsoleHelper()
         LOGGER.trace("Spinner initialized.")
 
@@ -153,12 +154,14 @@ class Spinner():
             # suffix = self._calculate_suffix()
 
             if self._show_elapsed and loopcnt % elapsed_break == 0:
-                self._elapsed_time = self._calculate_elapsed_time(dt.now(), self._start_time)
+                self._elapsed_time = self._calculate_elapsed_time(dt.now(), self._start_time) # type: ignore
                 elapsed_display = self._elapsed_time
             terminal_line = f'{self._caption} {cursor}  {elapsed_display} {self._suffix}'
+            self._spinner_lock.acquire()
             ConsoleHelper.print(terminal_line, eol='')
             ConsoleHelper.clear_to_EOL()
             ConsoleHelper.cursor_move(column=1)
+            self._spinner_lock.release()
             time.sleep(delay)
             loopcnt += 1
 
@@ -175,7 +178,7 @@ class Spinner():
 
 if __name__ == "__main__":
     for spinner_type in SpinnerType:
-        spinner = Spinner(spinner_type, spinner_type, True)
+        spinner = Spinner(spinner_type.name, spinner_type, True)
         spinner.start_spinner("Begin")
         for cnt in range(1,25):
             if cnt % 5 == 0:

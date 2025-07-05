@@ -28,11 +28,14 @@ import sys
 import time
 from enum import Enum
 from typing import Final, List, Tuple, Union
+import threading
 
 from loguru import logger as LOGGER
 
 from dt_tools.misc.helpers import StringHelper
 from dt_tools.os.os_helper import OSHelper
+
+# LOCK = threading.Lock()
 
 if OSHelper.is_windows():
     import msvcrt
@@ -436,7 +439,7 @@ class ConsoleHelper():
 
     @classmethod
     def print(cls, msg, eol='\n', as_bytes:bool = False, to_stderr:bool = False, 
-              fg: ColorFG = ColorFG.DEFAULT, bg: ColorBG = ColorBG.DEFAULT, style: TextStyle = TextStyle.TRANSPARENT):
+              fg: ColorFG = ColorFG.DEFAULT, bg: ColorBG = ColorBG.DEFAULT, style: TextStyle = TextStyle.TRANSPARENT): # type: ignore
         """
         Print msg to console.
 
@@ -640,7 +643,7 @@ class ConsoleHelper():
         """
         codes = []
         if isinstance(style, list):
-            style = ''.join(style)
+            style = ''.join(style) # type: ignore
         codes = [str(style), str(fg), str(bg)]
         format = ';'.join([x.removeprefix(f'{_ConsoleControl.ESC}[').removesuffix('m') for x in codes if x != 'None'])
         code = f'{_ConsoleControl.ESC}[{format}m'
@@ -651,6 +654,7 @@ class ConsoleHelper():
     def _output_to_terminal(cls, token: str, eol:str='', as_bytes: bool = False, to_stderr: bool = False):
     
         output_str = bytes(token,'utf-8') if as_bytes else token
+        # LOCK.acquire()
         if to_stderr:
             print(output_str, end=eol, flush=True, file=sys.stderr)
         else:
@@ -660,6 +664,7 @@ class ConsoleHelper():
                 # stderr will escape non-printable characters
                 print(output_str, end=eol, flush=True, file=sys.stderr)
         cls.LAST_CONSOLE_STR = token
+        # LOCK.release()
 
     @classmethod
     def _display_color_palette(cls):
