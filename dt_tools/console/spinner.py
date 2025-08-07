@@ -154,11 +154,14 @@ class Spinner():
             if self._show_elapsed and loopcnt % elapsed_break == 0:
                 self._elapsed_time = self._calculate_elapsed_time(dt.now(), self._start_time) # type: ignore
                 elapsed_display = self._elapsed_time
+            while not ConsoleHelper.cursor_move(column=1):
+                # print('oops')
+                time.sleep(.01)
+            # time.sleep(.05)
             terminal_line = f'{self._caption} {cursor}  {elapsed_display} {self._suffix}'
             ConsoleHelper.print(terminal_line, eol='')
+            # time.sleep(.05)
             ConsoleHelper.clear_to_EOL()
-            if not ConsoleHelper.cursor_move(column=1):
-                print('oops...')
             time.sleep(delay)
             loopcnt += 1
 
@@ -175,10 +178,10 @@ class Spinner():
 
 if __name__ == "__main__":
     for spinner_type in SpinnerType:
-        spinner = Spinner(spinner_type.name, spinner_type, True)
+        spinner = Spinner(f'Demo of spinner type: {spinner_type.name}', spinner_type, True)
         spinner.start_spinner("Begin")
         for cnt in range(1,25):
             if cnt % 5 == 0:
-                spinner.caption_suffix(f'Iteration {cnt}')
+                spinner.caption_suffix(f'Executing iteration {cnt}')
             time.sleep(.25)
         spinner.stop_spinner()

@@ -655,7 +655,6 @@ class ConsoleHelper():
     def _output_to_terminal(cls, token: str, eol:str='', as_bytes: bool = False, to_stderr: bool = False):
     
         output_str = bytes(token,'utf-8') if as_bytes else token
-        # LOCK.acquire()
         if to_stderr:
             print(output_str, end=eol, flush=True, file=sys.stderr)
         else:
@@ -664,8 +663,8 @@ class ConsoleHelper():
             except UnicodeEncodeError:
                 # stderr will escape non-printable characters
                 print(output_str, end=eol, flush=True, file=sys.stderr)
+                
         cls.LAST_CONSOLE_STR = token
-        # LOCK.release()
 
     @classmethod
     def _display_color_palette(cls):
