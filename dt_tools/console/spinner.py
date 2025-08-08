@@ -157,6 +157,8 @@ class Spinner():
                 elapsed_display = self._elapsed_time
             
             terminal_line = f'{self._caption} {cursor}  {elapsed_display} {self._suffix}'
+            while not ConsoleHelper.cursor_move(spinner_row, column=1):
+                time.sleep(.01)
             ConsoleHelper.print(terminal_line, eol='')
             ConsoleHelper.clear_to_EOL()
             while not ConsoleHelper.cursor_move(spinner_row, column=1):
