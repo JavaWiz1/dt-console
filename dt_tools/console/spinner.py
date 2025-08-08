@@ -151,23 +151,20 @@ class Spinner():
 
         while not self._finished and threading.main_thread().is_alive():
             cursor = self._get_cursor_shape()
-            # suffix = self._calculate_suffix()
 
             if self._show_elapsed and loopcnt % elapsed_break == 0:
                 self._elapsed_time = self._calculate_elapsed_time(dt.now(), self._start_time) # type: ignore
                 elapsed_display = self._elapsed_time
             
-            while not ConsoleHelper.cursor_move(spinner_row, column=1):
-                time.sleep(.01)
             terminal_line = f'{self._caption} {cursor}  {elapsed_display} {self._suffix}'
             ConsoleHelper.print(terminal_line, eol='')
             ConsoleHelper.clear_to_EOL()
+            while not ConsoleHelper.cursor_move(spinner_row, column=1):
+                time.sleep(.01)
             time.sleep(delay)
             loopcnt += 1
 
-        # terminal_line = ' ' * len(terminal_line)
         ConsoleHelper.clear_line()
-        # print(terminal_line, end = self._str_end)
 
     def _get_cursor_shape(self):
         self._idx += 1
