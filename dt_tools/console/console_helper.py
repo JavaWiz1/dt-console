@@ -711,7 +711,8 @@ class ConsoleHelper():
 
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
-
+        row = -1
+        col = -1
         try:
             tty.setraw(sys.stdin.fileno())
             sys.stdout.write("\x1b[6n")
@@ -725,11 +726,12 @@ class ConsoleHelper():
                 response += char
 
             row, col = map(int, response[2:].split(";"))
-            return row, col
-
+        except Exception as e:
+            LOGGER.debug(f'cursor_current_position() - Error getting cursor position: {e}')
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)        
-
+        
+        return row, col
 
 
 # ==========================================================================================================
