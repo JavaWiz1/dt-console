@@ -88,7 +88,9 @@ class Spinner():
             # If spinner is currently running, kill it.
             if self._spinner_thread.is_alive():
                 self.stop_spinner()
-
+                while self._spinner_thread.is_alive():
+                    time.sleep(.01)
+                    
         ConsoleHelper.cursor_off()
         if ConsoleHelper.valid_console():
             self._suffix = caption_suffix
@@ -157,8 +159,8 @@ class Spinner():
                 elapsed_display = self._elapsed_time
             
             terminal_line = f'{self._caption} {cursor}  {elapsed_display} {self._suffix}'
-            while not ConsoleHelper.cursor_move(spinner_row, column=1):
-                time.sleep(.01)
+            # while not ConsoleHelper.cursor_move(spinner_row, column=1):
+            #     time.sleep(.01)
             ConsoleHelper.print(terminal_line, eol='')
             ConsoleHelper.clear_to_EOL()
             while not ConsoleHelper.cursor_move(spinner_row, column=1):

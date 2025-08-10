@@ -426,10 +426,10 @@ class ConsoleHelper():
             row = int(cur_row)
         if column <= 0:
             column = int(cur_col)
-        max_rows, max_columns = cls.get_console_size()
         if row <= 0 or column <= 0:
             LOGGER.debug('cursor_move - row/column must be > 0')
             return False
+        max_rows, max_columns = cls.get_console_size()
         if max_rows > 0 and max_columns > 0:
             if column > max_columns or row > max_rows:
                 LOGGER.debug((f'cursor_move - row > {max_rows} or col > {max_columns}'))
@@ -701,11 +701,11 @@ class ConsoleHelper():
                 valid_coords = True
             except ValueError as ve:
                 val_errcnt += 1
-                time.sleep(0.05)  # wait a bit before retrying
+                time.sleep(0.01)  # wait a bit before retrying
                 if val_errcnt < 3:
-                    LOGGER.trace(f'cursor_current_postion()-Invalid row/col.  hex_loc: {hex_loc} | {token} - {ve}')
+                    LOGGER.trace(f'cursor_current_postion()-[{val_errcnt}] Invalid row/col.  hex_loc: {hex_loc} | {token} - {ve}')
                 else:
-                    LOGGER.debug(f'cursor_current_postion()-Invalid row/col.  hex_loc: {hex_loc} | {token} - {ve}')
+                    LOGGER.debug(f'cursor_current_postion()-[{val_errcnt}] Invalid row/col.  hex_loc: {hex_loc} | {token} - {ve}')
         return row, col
     
     @classmethod
