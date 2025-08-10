@@ -701,8 +701,11 @@ class ConsoleHelper():
                 valid_coords = True
             except ValueError as ve:
                 val_errcnt += 1
-                if val_errcnt == 3:
-                    LOGGER.debug(f'cursor_current_postion()-Invalid row/col (hex_loc): {hex_loc} | {token} - {ve}')
+                time.sleep(0.05)  # wait a bit before retrying
+                if val_errcnt < 3:
+                    LOGGER.trace(f'cursor_current_postion()-Invalid row/col.  hex_loc: {hex_loc} | {token} - {ve}')
+                else:
+                    LOGGER.debug(f'cursor_current_postion()-Invalid row/col.  hex_loc: {hex_loc} | {token} - {ve}')
         return row, col
     
     @classmethod
