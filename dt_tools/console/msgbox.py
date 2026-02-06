@@ -269,7 +269,8 @@ def _buttonbox(msg: str, title: str, choices: Union[List,Tuple], root=None, time
     else:
         boxRoot = tk.Tk()
         boxRoot.withdraw()
-
+        boxRoot.attributes('-topmost', True)
+        
     boxRoot.title(title)
     boxRoot.iconname("Dialog")
     boxRoot.geometry(rootWindowPosition)
